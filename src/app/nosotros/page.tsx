@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container, ImagePlaceholder, PageIntro, SectionHeading } from "@/components/ui";
 import { getCompany } from "@/lib/company";
+import { getTexts } from "@/lib/texts";
 import { pending, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -10,24 +11,24 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   const company = await getCompany();
+  const texts = await getTexts();
   return (
     <>
       <PageIntro
         eyebrow="Nosotros"
         title="Muebles Angulo"
-        intro="Contenido provisional: la historia, la experiencia y los valores deben ser facilitados y verificados por la empresa."
+        intro={texts.about_intro}
       />
       <Container className="grid gap-10 pt-12 md:grid-cols-2 md:gap-16 sm:pt-16">
         <ImagePlaceholder label="Foto del showroom (demostración)" ratio="aspect-[4/3]" />
         <div>
           <h2 className="font-heading text-2xl">Nuestra historia</h2>
-          <p className="mt-3 leading-relaxed text-carbon/80">
-            [PENDIENTE: historia real de la empresa. No se publican fechas, premios ni años de
-            experiencia hasta que estén confirmados.]
+          <p className="mt-3 whitespace-pre-line leading-relaxed text-carbon/80">
+            {texts.about_history}
           </p>
           <h2 className="mt-8 font-heading text-2xl">Nuestros valores</h2>
-          <p className="mt-3 leading-relaxed text-carbon/80">
-            [PENDIENTE: valores reales de la empresa.]
+          <p className="mt-3 whitespace-pre-line leading-relaxed text-carbon/80">
+            {texts.about_values}
           </p>
         </div>
       </Container>

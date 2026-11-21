@@ -4,6 +4,7 @@ import { Reveal } from "@/components/Reveal";
 import { ButtonLink, Container, ImagePlaceholder, SectionHeading } from "@/components/ui";
 import { getCategories, getProducts, getProjects, getServices } from "@/lib/data";
 import { getCompany } from "@/lib/company";
+import { getTexts } from "@/lib/texts";
 import { pending, site } from "@/lib/site";
 
 export default async function HomePage() {
@@ -15,6 +16,7 @@ export default async function HomePage() {
   ]);
   const categoryName = new Map(categories.map((c) => [c.slug, c.name]));
   const company = await getCompany();
+  const texts = await getTexts();
 
   return (
     <>
@@ -29,11 +31,10 @@ export default async function HomePage() {
           <Container className="w-full pb-10 sm:pb-16">
             <div className="max-w-xl bg-crema/95 p-6 sm:p-10">
               <h1 className="font-heading text-3xl leading-tight sm:text-5xl">
-                Espacios que reflejan tu forma de vivir.
+                {texts.home_hero_title}
               </h1>
               <p className="mt-4 leading-relaxed text-carbon/80">
-                Descubre nuestras colecciones y encuentra inspiración para crear el hogar que
-                imaginas.
+                {texts.home_hero_text}
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <ButtonLink href="/colecciones">Ver colecciones</ButtonLink>
@@ -154,11 +155,10 @@ export default async function HomePage() {
               Nuestra historia
             </p>
             <h2 className="font-heading text-3xl leading-tight sm:text-4xl">
-              Una forma cercana de entender el mobiliario
+              {texts.home_story_title}
             </h2>
-            <p className="mt-4 leading-relaxed text-carbon/80">
-              Texto provisional. La historia, la trayectoria y los valores reales de Muebles Angulo
-              deben ser aportados y verificados por la empresa antes de publicar.
+            <p className="mt-4 whitespace-pre-line leading-relaxed text-carbon/80">
+              {texts.home_story_text}
             </p>
             <div className="mt-7">
               <ButtonLink href="/nosotros" variant="secondary">

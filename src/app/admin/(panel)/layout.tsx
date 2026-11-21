@@ -15,7 +15,7 @@ const sections: Array<{ label: string; href?: string }> = [
   { label: "Productos", href: "/admin/productos" },
   { label: "Categorías", href: "/admin/categorias" },
   { label: "Proyectos", href: "/admin/proyectos" },
-  { label: "Portada" },
+  { label: "Portada y Nosotros", href: "/admin/portada" },
   { label: "Servicios", href: "/admin/servicios" },
   { label: "Medios", href: "/admin/medios" },
   { label: "Mensajes", href: "/admin/mensajes" },
