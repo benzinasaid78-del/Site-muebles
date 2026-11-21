@@ -18,10 +18,10 @@ const sections: Array<{ label: string; href?: string }> = [
   { label: "Portada" },
   { label: "Servicios", href: "/admin/servicios" },
   { label: "Medios", href: "/admin/medios" },
-  { label: "Mensajes" },
+  { label: "Mensajes", href: "/admin/mensajes" },
   { label: "Ajustes", href: "/admin/ajustes" },
-  { label: "Usuarios" },
-  { label: "Actividad" },
+  { label: "Usuarios", href: "/admin/usuarios" },
+  { label: "Actividad", href: "/admin/actividad" },
 ];
 
 function Nav() {
