@@ -4,7 +4,8 @@ import { Reveal } from "@/components/Reveal";
 import { ButtonLink, Container, ImagePlaceholder, SectionHeading } from "@/components/ui";
 import { getCategories, getProducts, getProjects, getServices } from "@/lib/data";
 import { getCompany } from "@/lib/company";
-import { getTexts } from "@/lib/texts";
+import Image from "next/image";
+import { getSiteContent } from "@/lib/texts";
 import { pending, site } from "@/lib/site";
 
 export default async function HomePage() {
@@ -16,17 +17,23 @@ export default async function HomePage() {
   ]);
   const categoryName = new Map(categories.map((c) => [c.slug, c.name]));
   const company = await getCompany();
-  const texts = await getTexts();
+  const { texts, hero, story } = await getSiteContent();
 
   return (
     <>
       {/* Hero */}
       <section className="relative">
-        <ImagePlaceholder
-          label="Imagen principal de demostración (se edita desde el panel)"
-          ratio="aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9]"
-          tone="bg-arena"
-        />
+        {hero ? (
+          <div className="relative aspect-[4/5] bg-arena sm:aspect-[16/9] lg:aspect-[21/9]">
+            <Image src={hero.url} alt={hero.alt} fill priority sizes="100vw" className="object-cover" />
+          </div>
+        ) : (
+          <ImagePlaceholder
+            label="Imagen principal de demostración (se edita desde el panel)"
+            ratio="aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9]"
+            tone="bg-arena"
+          />
+        )}
         <div className="absolute inset-0 flex items-end">
           <Container className="w-full pb-10 sm:pb-16">
             <div className="max-w-xl bg-crema/95 p-6 sm:p-10">
@@ -149,7 +156,13 @@ export default async function HomePage() {
       {/* Historia de la marca */}
       <section className="pt-20 sm:pt-28">
         <Container className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
-          <ImagePlaceholder label="Foto del showroom (demostración)" ratio="aspect-[4/3]" />
+          {story ? (
+            <div className="relative aspect-[4/3] bg-arena">
+              <Image src={story.url} alt={story.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+            </div>
+          ) : (
+            <ImagePlaceholder label="Foto del showroom (demostración)" ratio="aspect-[4/3]" />
+          )}
           <div>
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-madera-oscuro">
               Nuestra historia

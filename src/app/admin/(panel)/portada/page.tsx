@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { requirePermission } from "@/lib/auth";
 import { mergeTexts } from "@/lib/texts";
+import { loadMediaOptions } from "@/lib/admin-media";
 import { createClient } from "@/lib/supabase/server";
 import { TextsForm } from "./TextsForm";
 
@@ -13,6 +14,7 @@ export default async function TextsPage({ searchParams }: { searchParams: Search
   const sp = await searchParams;
   const supabase = await createClient();
   const { data } = await supabase.from("site_settings").select("value").eq("key", "texts").maybeSingle();
+  const media = await loadMediaOptions();
   const texts = mergeTexts((data as unknown as { value: unknown } | null)?.value);
 
   return (
@@ -27,7 +29,7 @@ export default async function TextsPage({ searchParams }: { searchParams: Search
         </p>
       )}
       <div className="mt-8">
-        <TextsForm texts={texts} />
+        <TextsForm texts={texts} media={media} />
       </div>
     </>
   );
