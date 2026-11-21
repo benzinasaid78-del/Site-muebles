@@ -47,6 +47,8 @@ export type Project = {
   category: string;
   publishedAt: string;
   featured: boolean;
+  cover?: MediaRef;
+  images?: MediaRef[];
 };
 
 export type Service = {

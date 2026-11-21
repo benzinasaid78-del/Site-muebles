@@ -31,6 +31,11 @@ const categorySchema = z.object({
     .min(0, "Mínimo 0.")
     .max(9999, "Máximo 9999."),
   active: z.boolean(),
+  cover_media_id: z
+    .string()
+    .trim()
+    .transform((v) => (v === "" ? null : v))
+    .pipe(z.string().uuid("Imagen no válida.").nullable()),
   seo_title: optionalText(70),
   seo_description: optionalText(160),
 });
@@ -46,6 +51,7 @@ export async function saveCategory(_prev: FormState, formData: FormData): Promis
     description: text(formData, "description"),
     display_order: text(formData, "display_order") || "0",
     active: formData.get("active") === "on",
+    cover_media_id: text(formData, "cover_media_id"),
     seo_title: text(formData, "seo_title"),
     seo_description: text(formData, "seo_description"),
   });

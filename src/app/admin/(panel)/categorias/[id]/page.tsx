@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@/lib/auth";
 import { uuidSchema } from "@/lib/admin";
+import { loadMediaOptions } from "@/lib/admin-media";
 import { createClient } from "@/lib/supabase/server";
 import { CategoryForm } from "../CategoryForm";
 
@@ -14,6 +15,7 @@ type Row = {
   description: string | null;
   display_order: number;
   active: boolean;
+  cover_media_id: string | null;
   seo_title: string | null;
   seo_description: string | null;
 };
@@ -24,9 +26,10 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
   if (!uuidSchema.safeParse(id).success) notFound();
 
   const supabase = await createClient();
+  const media = await loadMediaOptions();
   const { data } = await supabase
     .from("categories")
-    .select("id, name, slug, description, display_order, active, seo_title, seo_description")
+    .select("id, name, slug, description, display_order, active, cover_media_id, seo_title, seo_description")
     .eq("id", id)
     .is("deleted_at", null)
     .maybeSingle();
@@ -45,9 +48,11 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
             description: c.description ?? "",
             display_order: String(c.display_order),
             active: c.active,
+            cover_media_id: c.cover_media_id ?? "",
             seo_title: c.seo_title ?? "",
             seo_description: c.seo_description ?? "",
           }}
+          media={media}
         />
       </div>
     </>

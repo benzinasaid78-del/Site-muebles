@@ -85,11 +85,23 @@ export function ProjectCard({ project }: { project: Project }) {
   return (
     <Link href={`/proyectos/${project.slug}`} className="group block">
       <div className="overflow-hidden">
-        <ImagePlaceholder
-          label="Foto del proyecto"
-          ratio="aspect-[4/3]"
-          className="transition-transform duration-500 group-hover:scale-[1.03]"
-        />
+        {project.cover ? (
+          <div className="relative aspect-[4/3] bg-arena">
+            <Image
+              src={project.cover.url}
+              alt={project.cover.alt}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          </div>
+        ) : (
+          <ImagePlaceholder
+            label="Foto próximamente"
+            ratio="aspect-[4/3]"
+            className="transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        )}
       </div>
       <p className="mt-4 text-xs uppercase tracking-[0.15em] text-madera-oscuro">
         {project.category}

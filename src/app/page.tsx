@@ -96,7 +96,8 @@ export default async function HomePage() {
       </section>
       )}
 
-      {/* Servicios */}
+      {/* Servicios (solo si hay alguno publicado) */}
+      {services.length > 0 && (
       <section className="mt-20 bg-arena py-20 sm:mt-28 sm:py-24">
         <Container>
           <SectionHeading
@@ -118,8 +119,10 @@ export default async function HomePage() {
           </ul>
         </Container>
       </section>
+      )}
 
-      {/* Proyectos */}
+      {/* Proyectos (solo si hay alguno destacado y publicado) */}
+      {projects.length > 0 && (
       <section className="pt-20 sm:pt-28">
         <Container>
           <SectionHeading
@@ -140,6 +143,7 @@ export default async function HomePage() {
           </ul>
         </Container>
       </section>
+      )}
 
       {/* Historia de la marca */}
       <section className="pt-20 sm:pt-28">

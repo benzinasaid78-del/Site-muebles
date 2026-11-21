@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 import { saveCategory } from "./actions";
 import type { FormState } from "@/lib/admin";
+import type { MediaOption } from "@/lib/admin-media";
+import { MediaSinglePicker } from "@/components/admin/MediaPicker";
 import { slugify } from "@/lib/slug";
 import {
   Checkbox,
@@ -21,13 +23,14 @@ export type CategoryValues = {
   description: string;
   display_order: string;
   active: boolean;
+  cover_media_id: string;
   seo_title: string;
   seo_description: string;
 };
 
 const initial: FormState = {};
 
-export function CategoryForm({ category }: { category: CategoryValues }) {
+export function CategoryForm({ category, media }: { category: CategoryValues; media: MediaOption[] }) {
   const [state, action, pending] = useActionState(saveCategory, initial);
   const v = state.values;
   const errors = state.fieldErrors ?? {};
@@ -110,6 +113,15 @@ export function CategoryForm({ category }: { category: CategoryValues }) {
         label="Visible en la web"
         defaultChecked={v ? v.active === "on" : category.active}
       />
+
+      <fieldset className="space-y-4 border-t border-arena pt-6">
+        <legend className="font-heading text-lg">Imagen de portada</legend>
+        <MediaSinglePicker
+          media={media}
+          name="cover_media_id"
+          selected={(v?.cover_media_id ?? category.cover_media_id) || null}
+        />
+      </fieldset>
 
       <fieldset className="space-y-6 border-t border-arena pt-6">
         <legend className="font-heading text-lg">Buscadores (SEO)</legend>
