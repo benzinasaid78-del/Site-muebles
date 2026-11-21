@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container, PageIntro } from "@/components/ui";
-import { pending, site } from "@/lib/site";
+import { type Company, getCompany } from "@/lib/company";
+import { pending } from "@/lib/site";
 
-const pages: Record<string, { title: string; sections: Array<[string, string]> }> = {
+type LegalPageData = { title: string; sections: Array<[string, string]> };
+
+function buildPages(company: Company): Record<string, LegalPageData> {
+  return {
   "aviso-legal": {
     title: "Aviso legal",
     sections: [
       [
         "Datos identificativos",
-        `Titular: ${pending(site.legalName, "razón social")}. NIF/CIF: ${pending(site.taxId, "NIF/CIF")}. Domicilio: ${pending(site.address, "dirección oficial")}. Correo: ${pending(site.email, "correo electrónico")}. Datos de inscripción registral: [PENDIENTE: si procede].`,
+        `Titular: ${pending(company.legalName, "razón social")}. NIF/CIF: ${pending(company.taxId, "NIF/CIF")}. Domicilio: ${pending(company.address, "dirección oficial")}. Correo: ${pending(company.email, "correo electrónico")}. Datos de inscripción registral: [PENDIENTE: si procede].`,
       ],
       ["Objeto", "[PENDIENTE: texto legal revisado por la empresa o su asesor.]"],
     ],
@@ -17,7 +21,7 @@ const pages: Record<string, { title: string; sections: Array<[string, string]> }
   "politica-de-privacidad": {
     title: "Política de privacidad",
     sections: [
-      ["Responsable del tratamiento", `${pending(site.legalName, "razón social")}, ${pending(site.address, "dirección oficial")}.`],
+      ["Responsable del tratamiento", `${pending(company.legalName, "razón social")}, ${pending(company.address, "dirección oficial")}.`],
       ["Finalidad, base jurídica y derechos", "[PENDIENTE: texto conforme al RGPD y la LOPDGDD, revisado por la empresa o su asesor.]"],
     ],
   },
@@ -31,19 +35,20 @@ const pages: Record<string, { title: string; sections: Array<[string, string]> }
     title: "Condiciones de uso",
     sections: [["Condiciones", "[PENDIENTE: texto si la empresa lo considera necesario.]"]],
   },
-};
+  };
+}
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const page = pages[slug];
+  const page = buildPages(await getCompany())[slug];
   return page ? { title: page.title } : {};
 }
 
 export default async function LegalPage({ params }: Props) {
   const { slug } = await params;
-  const page = pages[slug];
+  const page = buildPages(await getCompany())[slug];
   if (!page) notFound();
 
   return (

@@ -19,6 +19,7 @@ const sections: Array<{ label: string; href?: string }> = [
   { label: "Contenido" },
   { label: "Medios", href: "/admin/medios" },
   { label: "Mensajes" },
+  { label: "Ajustes", href: "/admin/ajustes" },
   { label: "Usuarios" },
   { label: "Actividad" },
 ];

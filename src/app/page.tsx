@@ -3,6 +3,7 @@ import { CategoryCard, ProductCard, ProjectCard } from "@/components/cards";
 import { Reveal } from "@/components/Reveal";
 import { ButtonLink, Container, ImagePlaceholder, SectionHeading } from "@/components/ui";
 import { getCategories, getProducts, getProjects, getServices } from "@/lib/data";
+import { getCompany } from "@/lib/company";
 import { pending, site } from "@/lib/site";
 
 export default async function HomePage() {
@@ -13,6 +14,7 @@ export default async function HomePage() {
     getServices(),
   ]);
   const categoryName = new Map(categories.map((c) => [c.slug, c.name]));
+  const company = await getCompany();
 
   return (
     <>
@@ -171,8 +173,8 @@ export default async function HomePage() {
             <p className="mt-4 leading-relaxed text-crema/80">
               {site.locality}, {site.province}
             </p>
-            <p className="mt-2 text-sm text-crema/80">{pending(site.address, "dirección oficial")}</p>
-            <p className="mt-1 text-sm text-crema/80">{pending(site.hours, "horario")}</p>
+            <p className="mt-2 text-sm text-crema/80">{pending(company.address, "dirección oficial")}</p>
+            <p className="mt-1 text-sm text-crema/80">{pending(company.hours, "horario")}</p>
           </div>
           <div className="md:text-right">
             <p className="max-w-md leading-relaxed text-crema/80 md:ml-auto">

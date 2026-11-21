@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/cards";
 import { ButtonLink, Container, ImagePlaceholder, SectionHeading } from "@/components/ui";
 import { getCategory, getProduct, getRelatedProducts } from "@/lib/data";
+import { getCompany } from "@/lib/company";
 import { whatsappLink } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -36,7 +37,8 @@ export default async function ProductPage({ params }: Props) {
   const images = product.images ?? [];
 
   // Solo se abre WhatsApp si el usuario pulsa; nunca se envía nada automáticamente.
-  const wa = whatsappLink(`Hola, me interesa el producto "${product.name}". ¿Podéis darme más información?`);
+  const company = await getCompany();
+  const wa = whatsappLink(company.whatsapp, `Hola, me interesa el producto "${product.name}". ¿Podéis darme más información?`);
 
   return (
     <>

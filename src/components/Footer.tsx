@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getCompany } from "@/lib/company";
 import { pending, site } from "@/lib/site";
 import { Container } from "./ui";
 
@@ -9,7 +10,8 @@ const legal = [
   { href: "/legal/condiciones-de-uso", label: "Condiciones de uso" },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const company = await getCompany();
   return (
     <footer className="mt-24 bg-carbon text-crema">
       <Container className="grid gap-12 py-16 md:grid-cols-3">
@@ -23,10 +25,10 @@ export function Footer() {
         <div>
           <h2 className="font-heading text-lg">Contacto</h2>
           <address className="mt-4 space-y-1 text-sm not-italic leading-relaxed text-crema/80">
-            <p>{pending(site.address, "dirección oficial")}</p>
-            <p>{pending(site.phone, "teléfono")}</p>
-            <p>{pending(site.email, "correo electrónico")}</p>
-            <p>{pending(site.hours, "horario")}</p>
+            <p>{pending(company.address, "dirección oficial")}</p>
+            <p>{pending(company.phone, "teléfono")}</p>
+            <p>{pending(company.email, "correo electrónico")}</p>
+            <p>{pending(company.hours, "horario")}</p>
           </address>
         </div>
 
@@ -45,7 +47,7 @@ export function Footer() {
       </Container>
       <div className="border-t border-crema/15">
         <Container className="py-6 text-xs text-crema/70">
-          © {new Date().getFullYear()} {site.legalName ?? site.name}. Todos los derechos reservados.
+          © {new Date().getFullYear()} {company.legalName ?? site.name}. Todos los derechos reservados.
         </Container>
       </div>
     </footer>

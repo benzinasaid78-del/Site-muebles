@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container, ImagePlaceholder, PageIntro, SectionHeading } from "@/components/ui";
+import { getCompany } from "@/lib/company";
 import { pending, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -7,7 +8,8 @@ export const metadata: Metadata = {
   description: "Conoce a Muebles Angulo, tu tienda de muebles y decoración en Barbastro.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const company = await getCompany();
   return (
     <>
       <PageIntro
@@ -46,9 +48,9 @@ export default function AboutPage() {
         <dl className="mt-4 divide-y divide-arena border-y border-arena text-sm">
           {(
             [
-              ["Denominación", pending(site.legalName, "razón social")],
-              ["NIF/CIF", pending(site.taxId, "NIF/CIF")],
-              ["Dirección", pending(site.address, "dirección oficial")],
+              ["Denominación", pending(company.legalName, "razón social")],
+              ["NIF/CIF", pending(company.taxId, "NIF/CIF")],
+              ["Dirección", pending(company.address, "dirección oficial")],
               ["Localidad", `${site.locality}, ${site.province}`],
             ] as const
           ).map(([label, value]) => (

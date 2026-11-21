@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container, PageIntro } from "@/components/ui";
 import { getProduct } from "@/lib/data";
+import { getCompany } from "@/lib/company";
 import { pending, site } from "@/lib/site";
 import { ContactForm } from "./ContactForm";
 
@@ -13,6 +14,7 @@ type Props = { searchParams: Promise<{ producto?: string }> };
 
 export default async function ContactPage({ searchParams }: Props) {
   const { producto } = await searchParams;
+  const company = await getCompany();
   // Solo se usa el nombre de un producto que exista; el valor de la URL nunca se pinta tal cual.
   const product = producto ? await getProduct(producto) : null;
   const defaultSubject = product ? `Consulta sobre: ${product.name}` : "";
@@ -34,24 +36,24 @@ export default async function ContactPage({ searchParams }: Props) {
           <dl className="mt-4 space-y-4 text-sm">
             <div>
               <dt className="text-carbon/70">Dirección</dt>
-              <dd>{pending(site.address, "dirección oficial")}</dd>
+              <dd>{pending(company.address, "dirección oficial")}</dd>
               <dd>{site.locality}, {site.province}</dd>
             </div>
             <div>
               <dt className="text-carbon/70">Teléfono</dt>
-              <dd>{pending(site.phone, "teléfono")}</dd>
+              <dd>{pending(company.phone, "teléfono")}</dd>
             </div>
             <div>
               <dt className="text-carbon/70">WhatsApp</dt>
-              <dd>{pending(site.whatsapp, "número de WhatsApp")}</dd>
+              <dd>{pending(company.whatsapp, "número de WhatsApp")}</dd>
             </div>
             <div>
               <dt className="text-carbon/70">Correo electrónico</dt>
-              <dd>{pending(site.email, "correo electrónico")}</dd>
+              <dd>{pending(company.email, "correo electrónico")}</dd>
             </div>
             <div>
               <dt className="text-carbon/70">Horario</dt>
-              <dd>{pending(site.hours, "horario")}</dd>
+              <dd>{pending(company.hours, "horario")}</dd>
             </div>
           </dl>
           {/* Google Maps: se añade cuando haya dirección verificada y tras el consentimiento de cookies (Fase 7). */}
