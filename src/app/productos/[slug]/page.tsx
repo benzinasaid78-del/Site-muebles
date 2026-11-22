@@ -98,8 +98,8 @@ export default async function ProductPage({ params }: Props) {
               <p className="text-xs uppercase tracking-[0.2em] text-madera-oscuro">{category.name}</p>
             )}
             <h1 className="mt-2 font-heading text-3xl leading-tight sm:text-4xl">{product.name}</h1>
-            <div className="mt-4 flex items-start justify-between gap-4">
-              <p className="text-lg">
+            <div className="mt-6 flex items-start justify-between gap-4">
+              <p className="flex h-8 items-center text-lg">
                 {product.showPrice && product.price !== undefined
                   ? new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(product.price)
                   : null}

@@ -75,8 +75,8 @@ export function ProductCard({
         </div>
       </Link>
       {/* Precio a la izquierda y valoración a la derecha (fuera del enlace para poder pulsar las estrellas). */}
-      <div className="mt-2 flex items-start justify-between gap-3">
-        <p className="text-sm font-medium">
+      <div className="mt-5 flex items-start justify-between gap-3">
+        <p className="flex h-8 items-center text-sm font-medium">
           {hasPrice
             ? new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(
                 product.price as number,
