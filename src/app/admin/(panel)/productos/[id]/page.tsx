@@ -66,6 +66,11 @@ export default async function EditProductPage({
   return (
     <>
       <h1 className="font-heading text-3xl">Editar producto</h1>
+      {aviso === "fotos" && (
+        <p role="alert" className="mt-6 border border-red-700 px-4 py-3 text-sm text-red-800">
+          El producto se guardó, pero alguna foto nueva no se pudo subir. Revisa las imágenes e inténtalo de nuevo (JPG, PNG, WEBP o AVIF, hasta 4 MB).
+        </p>
+      )}
       {aviso === "imagenes" && (
         <p role="alert" className="mt-6 border border-red-700 px-4 py-3 text-sm text-red-800">
           El producto se guardó, pero las imágenes no. Vuelve a elegirlas y guarda de nuevo.

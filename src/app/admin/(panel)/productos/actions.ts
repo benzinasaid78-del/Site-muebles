@@ -14,6 +14,8 @@ import {
   text,
   uuidSchema,
 } from "@/lib/admin";
+import { MAX_FILES_PER_UPLOAD } from "@/lib/media";
+import { uploadImageFiles } from "@/lib/media-upload";
 import { createClient } from "@/lib/supabase/server";
 
 const priceSchema = z
@@ -91,6 +93,29 @@ export async function saveProduct(_prev: FormState, formData: FormData): Promise
     return { error: "Selección de imágenes no válida (máximo 20).", values, lists };
   }
   const images: string[] = [...new Set<string>(imagesParsed.data)];
+
+  // Fotos nuevas adjuntas en el propio formulario del producto.
+  const newFiles = formData
+    .getAll("new_images")
+    .filter((f): f is File => f instanceof File && f.size > 0);
+  if (newFiles.length > MAX_FILES_PER_UPLOAD) {
+    return { error: `Sube como máximo ${MAX_FILES_PER_UPLOAD} fotos nuevas cada vez.`, values, lists };
+  }
+  let uploadNote = "";
+  if (newFiles.length > 0) {
+    if (!profile.permissions.has("media.write")) {
+      return { error: "No tienes permiso para subir imágenes.", values, lists };
+    }
+    const up = await uploadImageFiles(newFiles, profile.id);
+    images.push(...up.ids);
+    if (up.problems.length > 0) uploadNote = up.problems.join(" ");
+    if (up.ids.length === 0) {
+      return { error: `No se pudo subir ninguna foto. ${uploadNote}`, values, lists };
+    }
+  }
+  if (images.length > 20) {
+    return { error: "Máximo 20 imágenes por producto.", values, lists };
+  }
   const mainId = images.includes(mainRaw) ? mainRaw : (images[0] ?? null);
 
   const rawId = text(formData, "id");
@@ -151,7 +176,7 @@ export async function saveProduct(_prev: FormState, formData: FormData): Promise
   revalidatePath("/admin/productos");
   revalidatePath("/productos");
   revalidatePath(`/productos/${parsed.data.slug}`);
-  redirect("/admin/productos?guardado=1");
+  redirect(uploadNote ? `/admin/productos/${productId}?aviso=fotos` : "/admin/productos?guardado=1");
 }
 
 function failure(

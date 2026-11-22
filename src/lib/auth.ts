@@ -51,19 +51,35 @@ export const getCurrentProfile = cache(async (): Promise<CurrentProfile | null> 
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: profileData } = await supabase
+  // Una sola consulta: perfil + permisos de su rol (menos viajes a la base de datos = panel más rápido).
+  type WithPerms = ProfileRow & { roles: { role_permissions: Array<{ permission_id: string }> } | null };
+  const joined = await supabase
     .from("profiles")
-    .select("id, full_name, role_id, active")
+    .select("id, full_name, role_id, active, roles(role_permissions(permission_id))")
     .eq("id", user.id)
     .maybeSingle();
-  const profile = profileData as unknown as ProfileRow | null;
-  if (!profile || !profile.active || !profile.role_id) return null;
 
-  const { data: permData } = await supabase
-    .from("role_permissions")
-    .select("permission_id")
-    .eq("role_id", profile.role_id);
-  const perms = (permData as unknown as Array<{ permission_id: string }> | null) ?? [];
+  let profile = joined.data as unknown as WithPerms | null;
+  let perms: Array<{ permission_id: string }> = profile?.roles?.role_permissions ?? [];
+
+  if (joined.error) {
+    // Respaldo: si la consulta combinada falla, se usan dos consultas simples (nunca bloquear el acceso por esto).
+    console.error("[auth] consulta combinada", { code: joined.error.code, message: joined.error.message });
+    const simple = await supabase
+      .from("profiles")
+      .select("id, full_name, role_id, active")
+      .eq("id", user.id)
+      .maybeSingle();
+    profile = simple.data as unknown as WithPerms | null;
+    if (profile?.role_id) {
+      const { data: permData } = await supabase
+        .from("role_permissions")
+        .select("permission_id")
+        .eq("role_id", profile.role_id);
+      perms = (permData as unknown as Array<{ permission_id: string }> | null) ?? [];
+    }
+  }
+  if (!profile || !profile.active || !profile.role_id) return null;
 
   return {
     id: profile.id,

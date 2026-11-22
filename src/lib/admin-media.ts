@@ -11,7 +11,7 @@ export async function loadMediaOptions(): Promise<MediaOption[]> {
     .select("id, storage_path, original_name, alt_text")
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
-    .limit(200);
+    .limit(100);
 
   return (
     (data as unknown as Array<{

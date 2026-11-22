@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { saveProduct } from "./actions";
 import type { FormState } from "@/lib/admin";
 import { slugify } from "@/lib/slug";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import {
   Checkbox,
   FormError,
@@ -191,24 +193,24 @@ export function ProductForm({
 
       <fieldset className="space-y-4 border-t border-arena pt-6">
         <legend className="font-heading text-lg">Imágenes</legend>
+        <ImageUploader />
         {media.length === 0 ? (
           <p className="text-sm text-carbon/70">
-            No hay imágenes en la biblioteca. Súbelas primero en{" "}
+            Todavía no hay imágenes en la biblioteca (también puedes gestionarlas en{" "}
             <Link href="/admin/medios" className="underline">
               Medios
             </Link>
-            .
+            ).
           </p>
         ) : (
           <>
             <p className="text-xs text-carbon/70">
-              Marca las imágenes del producto y elige cuál es la principal. Se muestran en el orden de esta lista.
+              O elige fotos que ya están en la biblioteca: marca «Usar» y elige cuál es la principal.
             </p>
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {media.map((m) => (
                 <li key={m.id} className="border border-arena bg-white p-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={m.url} alt={m.alt} loading="lazy" className="aspect-[4/3] w-full bg-arena object-cover" />
+                  <Image src={m.url} alt={m.alt} width={240} height={180} sizes="240px" className="aspect-[4/3] w-full bg-arena object-cover" />
                   <label className="mt-2 flex items-center gap-2 text-xs">
                     <input
                       type="checkbox"

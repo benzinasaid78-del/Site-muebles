@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { MediaOption } from "@/lib/admin-media";
 
@@ -30,8 +31,7 @@ export function MediaMultiPicker({
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {media.map((m) => (
           <li key={m.id} className="border border-arena bg-white p-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={m.url} alt={m.alt} loading="lazy" className="aspect-[4/3] w-full bg-arena object-cover" />
+            <Image src={m.url} alt={m.alt} width={240} height={180} sizes="240px" className="aspect-[4/3] w-full bg-arena object-cover" />
             <label className="mt-2 flex items-center gap-2 text-xs">
               <input
                 type="checkbox"
@@ -80,8 +80,7 @@ export function MediaSinglePicker({
       </li>
       {media.map((m) => (
         <li key={m.id} className="border border-arena bg-white p-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={m.url} alt={m.alt} loading="lazy" className="aspect-[4/3] w-full bg-arena object-cover" />
+          <Image src={m.url} alt={m.alt} width={240} height={180} sizes="240px" className="aspect-[4/3] w-full bg-arena object-cover" />
           <label className="mt-2 flex items-center gap-2 text-xs">
             <input
               type="radio"
