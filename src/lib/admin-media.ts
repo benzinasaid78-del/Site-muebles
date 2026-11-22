@@ -3,15 +3,18 @@ import { createClient } from "@/lib/supabase/server";
 
 export type MediaOption = { id: string; url: string; alt: string; name: string };
 
-/** Imágenes de la mediateca disponibles para elegir en proyectos y categorías. */
-export async function loadMediaOptions(): Promise<MediaOption[]> {
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Solo las imágenes indicadas (las que ya usa la ficha). Nunca se lista la biblioteca entera. */
+export async function loadMediaOptions(ids: Array<string | null | undefined>): Promise<MediaOption[]> {
+  const wanted = [...new Set(ids.filter((v): v is string => typeof v === "string" && UUID.test(v)))];
+  if (wanted.length === 0) return [];
   const supabase = await createClient();
   const { data } = await supabase
     .from("media_assets")
     .select("id, storage_path, original_name, alt_text")
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false })
-    .limit(100);
+    .in("id", wanted)
+    .is("deleted_at", null);
 
   return (
     (data as unknown as Array<{

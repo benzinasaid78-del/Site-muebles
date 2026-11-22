@@ -14,6 +14,8 @@ import {
   text,
   uuidSchema,
 } from "@/lib/admin";
+import { MAX_FILES_PER_UPLOAD } from "@/lib/media";
+import { uploadImageFiles } from "@/lib/media-upload";
 import { createClient } from "@/lib/supabase/server";
 
 const projectSchema = z.object({
@@ -59,6 +61,27 @@ export async function saveProject(_prev: FormState, formData: FormData): Promise
     return { error: "Selección de imágenes no válida (máximo 30).", values, lists };
   }
   const images: string[] = [...new Set<string>(imagesParsed.data)];
+
+  // Fotos nuevas adjuntas en el propio formulario del proyecto.
+  const newFiles = formData
+    .getAll("new_images")
+    .filter((f): f is File => f instanceof File && f.size > 0);
+  if (newFiles.length > MAX_FILES_PER_UPLOAD) {
+    return { error: `Sube como máximo ${MAX_FILES_PER_UPLOAD} fotos nuevas cada vez.`, values, lists };
+  }
+  if (newFiles.length > 0) {
+    if (!profile.permissions.has("media.write")) {
+      return { error: "No tienes permiso para subir imágenes.", values, lists };
+    }
+    const up = await uploadImageFiles(newFiles, profile.id);
+    images.push(...up.ids);
+    if (up.ids.length === 0) {
+      return { error: `No se pudo subir ninguna foto. ${up.problems.join(" ")}`, values, lists };
+    }
+  }
+  if (images.length > 30) {
+    return { error: "Máximo 30 imágenes por proyecto.", values, lists };
+  }
   const mainId = images.includes(mainRaw) ? mainRaw : (images[0] ?? null);
 
   const rawId = text(formData, "id");

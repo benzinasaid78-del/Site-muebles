@@ -5,7 +5,7 @@ import { saveTexts } from "./actions";
 import type { FormState } from "@/lib/admin";
 import type { Texts } from "@/lib/texts";
 import type { MediaOption } from "@/lib/admin-media";
-import { MediaSinglePicker } from "@/components/admin/MediaPicker";
+import { SingleImageField } from "@/components/admin/SingleImageField";
 import { FormError, TextArea, TextField, primaryButton } from "@/components/admin/fields";
 
 const initial: FormState = {};
@@ -19,7 +19,7 @@ export function TextsForm({ texts, media }: { texts: Texts; media: MediaOption[]
     <div>
       <p className="text-sm font-medium">{label}</p>
       <div className="mt-2">
-        <MediaSinglePicker media={media} name={name} selected={pick(name)} />
+        <SingleImageField name={name} label="" current={media.find((m) => m.id === pick(name)) ?? null} />
       </div>
       {e[name] && <p role="alert" className="mt-1 text-sm text-red-800">{e[name]}</p>}
     </div>

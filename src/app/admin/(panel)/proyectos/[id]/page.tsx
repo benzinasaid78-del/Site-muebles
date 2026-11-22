@@ -34,7 +34,7 @@ export default async function EditProjectPage({
   if (!uuidSchema.safeParse(id).success) notFound();
 
   const supabase = await createClient();
-  const [{ data }, { data: imgs }, media] = await Promise.all([
+  const [{ data }, { data: imgs }] = await Promise.all([
     supabase
       .from("projects")
       .select("id, slug, title, description, project_category, cover_media_id, featured, status, seo_title, seo_description")
@@ -46,11 +46,11 @@ export default async function EditProjectPage({
       .select("media_id, position")
       .eq("project_id", id)
       .order("position", { ascending: true }),
-    loadMediaOptions(),
   ]);
   const p = data as unknown as Row | null;
   if (!p) notFound();
   const images = (imgs as unknown as Array<{ media_id: string }> | null) ?? [];
+  const media = await loadMediaOptions([...images.map((i) => i.media_id), p.cover_media_id]);
 
   return (
     <>

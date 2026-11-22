@@ -1,5 +1,6 @@
 import { MAX_UPLOAD_BYTES, cleanFileName, detectImage } from "@/lib/media";
-import { logActivity } from "@/lib/admin";
+import { logActivity, text } from "@/lib/admin";
+import type { CurrentProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -63,4 +64,29 @@ export async function uploadImageFiles(
     await logActivity(userId, "media.upload", "media", id, { mime: detected.mime, size: file.size });
   }
   return { ids, problems };
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Campo de UNA imagen: si se envía una foto nueva (`name_file`) se sube y se devuelve su id;
+ * si no, se mantiene el id actual (`name`) o null si se quitó.
+ */
+export async function resolveImageField(
+  formData: FormData,
+  name: string,
+  profile: CurrentProfile,
+): Promise<{ id: string | null; error?: string }> {
+  const file = formData.get(`${name}_file`);
+  if (file instanceof File && file.size > 0) {
+    if (!profile.permissions.has("media.write")) {
+      return { id: null, error: "No tienes permiso para subir imágenes." };
+    }
+    const up = await uploadImageFiles([file], profile.id);
+    const id = up.ids[0];
+    if (!id) return { id: null, error: `No se pudo subir la foto. ${up.problems.join(" ")}`.trim() };
+    return { id };
+  }
+  const current = text(formData, name).trim();
+  return { id: UUID.test(current) ? current : null };
 }

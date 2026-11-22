@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Nueva categoría" };
 
 export default async function NewCategoryPage() {
   await requirePermission("categories.write");
-  const media = await loadMediaOptions();
+  const media = await loadMediaOptions([]);
   return (
     <>
       <h1 className="font-heading text-3xl">Nueva categoría</h1>

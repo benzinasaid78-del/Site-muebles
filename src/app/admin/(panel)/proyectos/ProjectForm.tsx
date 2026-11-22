@@ -8,6 +8,7 @@ import type { MediaOption } from "@/lib/admin-media";
 import { slugify } from "@/lib/slug";
 import { Checkbox, FormError, TextArea, TextField, primaryButton, secondaryButton } from "@/components/admin/fields";
 import { MediaMultiPicker } from "@/components/admin/MediaPicker";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 export type ProjectValues = {
   id?: string;
@@ -126,7 +127,8 @@ export function ProjectForm({
 
       <fieldset className="space-y-4 border-t border-arena pt-6">
         <legend className="font-heading text-lg">Imágenes</legend>
-        <MediaMultiPicker media={media} selected={chosen} main={main} />
+        <ImageUploader />
+        {media.length > 0 && <MediaMultiPicker media={media} selected={chosen} main={main} />}
       </fieldset>
 
       <fieldset className="space-y-6 border-t border-arena pt-6">

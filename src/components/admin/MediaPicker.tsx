@@ -26,7 +26,7 @@ export function MediaMultiPicker({
   return (
     <>
       <p className="text-xs text-carbon/70">
-        Marca las imágenes y elige la principal (será la portada). Se muestran en el orden de esta lista.
+        Fotos actuales: desmarca «Usar» para quitar una y elige la principal (será la portada).
       </p>
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {media.map((m) => (

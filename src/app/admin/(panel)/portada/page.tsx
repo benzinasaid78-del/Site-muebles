@@ -14,8 +14,11 @@ export default async function TextsPage({ searchParams }: { searchParams: Search
   const sp = await searchParams;
   const supabase = await createClient();
   const { data } = await supabase.from("site_settings").select("value").eq("key", "texts").maybeSingle();
-  const media = await loadMediaOptions();
   const texts = mergeTexts((data as unknown as { value: unknown } | null)?.value);
+  const media = await loadMediaOptions([
+    texts.home_hero_image, texts.home_story_image, texts.about_image,
+    texts.team1_image, texts.team2_image, texts.team3_image, texts.team4_image,
+  ]);
 
   return (
     <>

@@ -14,6 +14,7 @@ import {
   text,
   uuidSchema,
 } from "@/lib/admin";
+import { resolveImageField } from "@/lib/media-upload";
 import { createClient } from "@/lib/supabase/server";
 
 const categorySchema = z.object({
@@ -62,6 +63,11 @@ export async function saveCategory(_prev: FormState, formData: FormData): Promis
   const rawId = text(formData, "id");
   const id = rawId ? uuidSchema.safeParse(rawId) : null;
   if (rawId && !id?.success) return { error: "Identificador de categoría no válido.", values };
+
+  // Foto de portada: se sube la nueva (si hay) o se mantiene/quita la actual.
+  const cover = await resolveImageField(formData, "cover_media_id", profile);
+  if (cover.error) return { error: cover.error, values };
+  parsed.data.cover_media_id = cover.id;
 
   const supabase = await createClient();
   let savedId: string;

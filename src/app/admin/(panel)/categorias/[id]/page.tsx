@@ -26,7 +26,6 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
   if (!uuidSchema.safeParse(id).success) notFound();
 
   const supabase = await createClient();
-  const media = await loadMediaOptions();
   const { data } = await supabase
     .from("categories")
     .select("id, name, slug, description, display_order, active, cover_media_id, seo_title, seo_description")
@@ -35,6 +34,7 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
     .maybeSingle();
   const c = data as unknown as Row | null;
   if (!c) notFound();
+  const media = await loadMediaOptions([c.cover_media_id]);
 
   return (
     <>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@/lib/auth";
 import { uuidSchema } from "@/lib/admin";
+import { loadMediaOptions } from "@/lib/admin-media";
 import { createClient } from "@/lib/supabase/server";
 import { ProductForm } from "../ProductForm";
 import { loadProductFormOptions } from "../options";
@@ -61,6 +62,7 @@ export default async function EditProductPage({
   if (!p) notFound();
 
   const images = (imgs as unknown as Array<{ media_id: string; is_main: boolean }> | null) ?? [];
+  const media = await loadMediaOptions(images.map((i) => i.media_id));
   const mainId = images.find((i) => i.is_main)?.media_id ?? null;
 
   return (
@@ -98,7 +100,7 @@ export default async function EditProductPage({
             seo_description: p.seo_description ?? "",
           }}
           categories={options.categories}
-          media={options.media}
+          media={media}
           selectedIds={images.map((i) => i.media_id)}
           mainId={mainId}
         />

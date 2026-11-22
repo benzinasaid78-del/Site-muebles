@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Nuevo proyecto" };
 
 export default async function NewProjectPage() {
   await requirePermission("projects.write");
-  const media = await loadMediaOptions();
+  const media = await loadMediaOptions([]);
   return (
     <>
       <h1 className="font-heading text-3xl">Nuevo proyecto</h1>

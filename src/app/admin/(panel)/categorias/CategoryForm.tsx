@@ -5,7 +5,7 @@ import { useActionState, useState } from "react";
 import { saveCategory } from "./actions";
 import type { FormState } from "@/lib/admin";
 import type { MediaOption } from "@/lib/admin-media";
-import { MediaSinglePicker } from "@/components/admin/MediaPicker";
+import { SingleImageField } from "@/components/admin/SingleImageField";
 import { slugify } from "@/lib/slug";
 import {
   Checkbox,
@@ -116,10 +116,10 @@ export function CategoryForm({ category, media }: { category: CategoryValues; me
 
       <fieldset className="space-y-4 border-t border-arena pt-6">
         <legend className="font-heading text-lg">Imagen de portada</legend>
-        <MediaSinglePicker
-          media={media}
+        <SingleImageField
           name="cover_media_id"
-          selected={(v?.cover_media_id ?? category.cover_media_id) || null}
+          label="Foto de portada de la colección"
+          current={media.find((m) => m.id === (v?.cover_media_id ?? category.cover_media_id)) ?? null}
         />
       </fieldset>
 

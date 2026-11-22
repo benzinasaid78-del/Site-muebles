@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requirePermission } from "@/lib/auth";
 import { type FormState, fieldErrorsFrom, logActivity, snapshot, text } from "@/lib/admin";
+import { resolveImageField } from "@/lib/media-upload";
 import { createClient } from "@/lib/supabase/server";
 
 const t = (max: number) =>
@@ -57,10 +58,21 @@ export async function saveTexts(_prev: FormState, formData: FormData): Promise<F
     return { error: "Revisa los campos marcados.", fieldErrors: fieldErrorsFrom(parsed.error), values };
   }
 
+  // Fotos: se sube la nueva (si hay) o se mantiene/quita la actual.
+  const data: Record<string, string> = { ...parsed.data };
+  for (const key of [
+    "home_hero_image", "home_story_image", "about_image",
+    "team1_image", "team2_image", "team3_image", "team4_image",
+  ]) {
+    const r = await resolveImageField(formData, key, profile);
+    if (r.error) return { error: r.error, values };
+    data[key] = r.id ?? "";
+  }
+
   const supabase = await createClient();
   const { error } = await supabase
     .from("site_settings")
-    .upsert([{ key: "texts", value: parsed.data }], { onConflict: "key" });
+    .upsert([{ key: "texts", value: data }], { onConflict: "key" });
   if (error) {
     console.error("[portada] error al guardar", { code: error.code, message: error.message });
     return { error: "No se pudo guardar. Inténtalo de nuevo.", values };

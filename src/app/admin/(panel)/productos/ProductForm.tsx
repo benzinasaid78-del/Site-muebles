@@ -195,17 +195,11 @@ export function ProductForm({
         <legend className="font-heading text-lg">Imágenes</legend>
         <ImageUploader />
         {media.length === 0 ? (
-          <p className="text-sm text-carbon/70">
-            Todavía no hay imágenes en la biblioteca (también puedes gestionarlas en{" "}
-            <Link href="/admin/medios" className="underline">
-              Medios
-            </Link>
-            ).
-          </p>
+          <p className="text-sm text-carbon/70">Este producto todavía no tiene fotos.</p>
         ) : (
           <>
             <p className="text-xs text-carbon/70">
-              O elige fotos que ya están en la biblioteca: marca «Usar» y elige cuál es la principal.
+              Fotos actuales del producto: desmarca «Usar» para quitar una y elige cuál es la principal.
             </p>
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {media.map((m) => (
