@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { RatingStars } from "@/components/RatingStars";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/cards";
 import { ButtonLink, Container, ImagePlaceholder, SectionHeading } from "@/components/ui";
@@ -97,11 +98,20 @@ export default async function ProductPage({ params }: Props) {
               <p className="text-xs uppercase tracking-[0.2em] text-madera-oscuro">{category.name}</p>
             )}
             <h1 className="mt-2 font-heading text-3xl leading-tight sm:text-4xl">{product.name}</h1>
-            {product.showPrice && product.price !== undefined && (
-              <p className="mt-4 text-lg">
-                {new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(product.price)}
+            <div className="mt-4 flex items-start justify-between gap-4">
+              <p className="text-lg">
+                {product.showPrice && product.price !== undefined
+                  ? new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(product.price)
+                  : null}
               </p>
-            )}
+              <RatingStars
+                productId={product.id}
+                name={product.name}
+                avg={product.ratingAvg}
+                count={product.ratingCount}
+              />
+            </div>
+            <p className="mt-1 text-right text-xs text-carbon/60">Valoraciones de visitantes, sin verificar.</p>
             <p className="mt-6 leading-relaxed text-carbon/80">{product.description}</p>
 
             {visibleSpecs.length > 0 && (

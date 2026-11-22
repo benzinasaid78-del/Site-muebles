@@ -35,6 +35,9 @@ export type Product = {
   finishes?: string;
   featured: boolean;
   published: boolean;
+  /** Valoración media de los visitantes (0 si aún no hay) y número de valoraciones. */
+  ratingAvg: number;
+  ratingCount: number;
   /** Imágenes del producto; la primera es la principal. */
   images?: MediaRef[];
 };
@@ -96,6 +99,8 @@ export const demoProducts: Product[] = demoCategories.flatMap((cat, idx) =>
     showPrice: false,
     featured: n === 1 && idx < 6,
     published: true,
+    ratingAvg: 0,
+    ratingCount: 0,
   })),
 );
 

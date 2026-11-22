@@ -1,6 +1,6 @@
 "use server";
 
-import { createPublicClient } from "@/lib/supabase/public";
+import { createActionClient } from "@/lib/supabase/public";
 
 export type ContactState = {
   status: "idle" | "error" | "success";
@@ -42,7 +42,7 @@ export async function submitContact(
   }
 
   try {
-    const { data, error } = await createPublicClient().rpc("submit_contact", {
+    const { data, error } = await createActionClient().rpc("submit_contact", {
       p_name: name,
       p_email: email,
       p_subject: subject,

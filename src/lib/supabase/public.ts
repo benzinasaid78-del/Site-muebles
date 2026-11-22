@@ -16,3 +16,15 @@ export function createPublicClient() {
     },
   });
 }
+
+/**
+ * Cliente para ACCIONES de escritura públicas (formulario, valoraciones): sin caché de ninguna clase,
+ * para que cada llamada llegue de verdad a la base de datos.
+ */
+export function createActionClient() {
+  const { url, key } = getSupabaseEnv();
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }) },
+  });
+}

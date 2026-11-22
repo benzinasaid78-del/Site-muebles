@@ -42,6 +42,8 @@ type ProductRow = {
   materials: string | null;
   finishes: string | null;
   featured: boolean;
+  rating_avg: number | string | null;
+  rating_count: number | null;
   categories: { slug: string } | null;
   product_images: Array<{ position: number; is_main: boolean; media: MediaEmbed }> | null;
 };
@@ -87,12 +89,14 @@ function mapProduct(r: ProductRow): Product {
     finishes: r.finishes ?? undefined,
     featured: r.featured,
     published: true,
+    ratingAvg: Number(r.rating_avg ?? 0) || 0,
+    ratingCount: r.rating_count ?? 0,
     images,
   };
 }
 
 const PRODUCT_SELECT =
-  "id, slug, name, short_description, description, brand, reference, price, show_price, dimensions, materials, finishes, featured, categories(slug), product_images(position, is_main, media:media_assets(storage_path, alt_text))";
+  "id, slug, name, short_description, description, brand, reference, price, show_price, dimensions, materials, finishes, featured, rating_avg, rating_count, categories(slug), product_images(position, is_main, media:media_assets(storage_path, alt_text))";
 
 export async function getCategories(): Promise<Category[]> {
   try {
@@ -116,15 +120,22 @@ export async function getCategory(slug: string): Promise<Category | null> {
 }
 
 async function fetchPublishedProducts(): Promise<Product[]> {
-  try {
-    const { data, error } = await createPublicClient()
+  const run = (select: string) =>
+    createPublicClient()
       .from("products")
-      .select(PRODUCT_SELECT)
+      .select(select)
       .eq("status", "published")
       .is("deleted_at", null)
       .order("featured", { ascending: false })
       .order("created_at", { ascending: false })
       .limit(500);
+  try {
+    let { data, error } = await run(PRODUCT_SELECT);
+    if (error) {
+      // Respaldo: si aún no se aplicó la migración de valoraciones, el catálogo debe seguir funcionando.
+      console.error("[data] productos (con valoraciones)", error.message);
+      ({ data, error } = await run(PRODUCT_SELECT.replace("rating_avg, rating_count, ", "")));
+    }
     if (error) throw error;
     return ((data as unknown as ProductRow[] | null) ?? []).map(mapProduct);
   } catch (e) {
