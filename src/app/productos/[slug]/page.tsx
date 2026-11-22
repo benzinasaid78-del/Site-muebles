@@ -68,7 +68,7 @@ export default async function ProductPage({ params }: Props) {
                     fill
                     priority
                     sizes="(min-width: 1024px) 50vw, 100vw"
-                    className="object-cover"
+                    className="object-contain p-4 sm:p-6"
                   />
                 </div>
                 {images.length > 1 && (
@@ -80,7 +80,7 @@ export default async function ProductPage({ params }: Props) {
                           alt={img.alt}
                           fill
                           sizes="(min-width: 1024px) 17vw, 33vw"
-                          className="object-cover"
+                          className="object-contain p-2"
                         />
                       </li>
                     ))}
