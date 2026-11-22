@@ -9,6 +9,7 @@ const securityHeaders = [
     value: "camera=(), microphone=(), geolocation=(), payment=()",
   },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
 // Host de Supabase Storage (para next/image en la web pública).
@@ -19,6 +20,27 @@ const supabaseHost = (() => {
     return null;
   }
 })();
+
+const supabaseOrigin = supabaseHost ? `https://${supabaseHost}` : "";
+
+// Parte de la CSP que se APLICA ya: no rompe nada y bloquea clickjacking, plugins y formularios externos.
+const enforcedCsp = ["frame-ancestors 'none'", "object-src 'none'", "base-uri 'self'", "form-action 'self'"].join("; ");
+
+// CSP completa en modo SOLO INFORME: no bloquea nada, solo avisa en la consola del navegador.
+// Cuando se compruebe que no hay avisos en las páginas reales, se pasa a "Content-Security-Policy".
+const reportOnlyCsp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  `img-src 'self' data: blob: ${supabaseOrigin}`.trim(),
+  "font-src 'self' data:",
+  `connect-src 'self' ${supabaseOrigin}`.trim(),
+  "frame-src 'none'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -38,7 +60,14 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      { source: "/:path*", headers: securityHeaders },
+      {
+        source: "/:path*",
+        headers: [
+          ...securityHeaders,
+          { key: "Content-Security-Policy", value: enforcedCsp },
+          { key: "Content-Security-Policy-Report-Only", value: reportOnlyCsp },
+        ],
+      },
       // La zona de administración nunca debe guardarse en caché.
       {
         source: "/admin/:path*",
@@ -46,8 +75,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Fase 5: añadir el host de Supabase Storage en images.remotePatterns.
-  // Fase 6: Content Security Policy (primero en modo "report-only" y probada).
 };
 
 export default nextConfig;

@@ -10,12 +10,12 @@
 - **Subida de imágenes**: tipo real por firma (no por extensión), solo JPEG/PNG/WEBP/AVIF, máximo 4 MB, nombre aleatorio; SVG y HTML rechazados.
 - **Formulario de contacto**: campo trampa (honeypot), límite de 3 mensajes por correo y hora y 30 por hora en total.
 - **Registro de actividad** solo con metadatos (nunca contraseñas ni contenido de mensajes).
-- **Cabeceras de seguridad** en `next.config.ts`; `/admin` marcado `noindex` y bloqueado en `robots.txt`.
+- **Cabeceras de seguridad** en `next.config.ts` (incluye CSP: la parte anti-clickjacking/plugins/formularios externos está aplicada; la política completa está en modo solo-informe hasta comprobarla); `/admin` marcado `noindex` y bloqueado en `robots.txt`.
 - **Borrado lógico** de productos, categorías, proyectos y servicios.
 - No hay claves secretas en el código; solo la clave pública (publishable) llega al navegador.
 
 ## Pendiente (no implementado todavía)
-- Política CSP estricta (hay que probarla con el sitio real para no romper nada).
+- Activar la CSP completa: revisar la consola del navegador en las páginas reales y, sin avisos, cambiar `Content-Security-Policy-Report-Only` por `Content-Security-Policy`.
 - Límite de intentos de acceso (el de Supabase Auth es el predeterminado).
 - Verificación en dos pasos (MFA) para los administradores.
 - CAPTCHA en el formulario si aparece spam.
