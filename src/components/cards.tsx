@@ -9,19 +9,19 @@ export function CategoryCard({ category }: { category: Category }) {
     <Link href={`/colecciones/${category.slug}`} className="group block">
       <div className="overflow-hidden">
         {category.cover ? (
-          <div className="relative aspect-square bg-white">
+          <div className="relative aspect-[4/5] bg-arena">
             <Image
               src={category.cover.url}
               alt={category.cover.alt}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-              className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.03]"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             />
           </div>
         ) : (
           <ImagePlaceholder
             label={category.name}
-            ratio="aspect-square"
+            ratio="aspect-[4/5]"
             className="transition-transform duration-500 group-hover:scale-[1.03]"
           />
         )}
