@@ -21,7 +21,7 @@ export default async function ProjectsPage() {
         {projects.length === 0 ? (
           <p className="text-carbon/70">Próximamente publicaremos aquí nuestros proyectos.</p>
         ) : (
-          <ul className="grid gap-x-5 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-x-5 gap-y-12 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {projects.map((p) => (
               <li key={p.id}>
                 <ProjectCard project={p} />

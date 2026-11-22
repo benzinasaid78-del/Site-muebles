@@ -18,7 +18,7 @@ export default async function CollectionsPage() {
         intro="Salones, dormitorios, cocinas y mucho más. Elige una colección para ver sus productos."
       />
       <Container className="pt-12 sm:pt-16">
-        <ul className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3">
+        <ul className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 xl:grid-cols-4">
           {categories.map((c) => (
             <li key={c.id}>
               <CategoryCard category={c} />
