@@ -20,7 +20,7 @@ html {
 body {
   background-color: var(--color-crema);
   color: var(--color-carbon);
-  font-family: var(--font-sans);
+  font-family: var(--font-heading);
   -webkit-font-smoothing: antialiased;
 }
 
