@@ -84,7 +84,7 @@ export function ImageUploader() {
       next.pop();
       msg = "Se alcanzó el límite de tamaño por guardado (4 MB). Guarda y añade el resto después.";
     }
-    if (next.length === 1 && next[0].size > MAX_TOTAL) {
+    if (next.length === 1 && (next[0]?.size ?? 0) > MAX_TOTAL) {
       next = [];
       msg = "Esa foto es demasiado grande (más de 4 MB incluso reducida).";
     }
