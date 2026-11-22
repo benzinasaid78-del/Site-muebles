@@ -131,11 +131,6 @@ export function ProjectForm({
         {media.length > 0 && <MediaMultiPicker media={media} selected={chosen} main={main} />}
       </fieldset>
 
-      <fieldset className="space-y-6 border-t border-arena pt-6">
-        <legend className="font-heading text-lg">Buscadores (SEO)</legend>
-        <TextField name="seo_title" label="Título SEO" hint="Opcional. Máximo 70 caracteres." maxLength={70} defaultValue={v?.seo_title ?? project.seo_title} error={errors.seo_title} />
-        <TextArea name="seo_description" label="Descripción SEO" hint="Opcional. Máximo 160 caracteres." rows={3} maxLength={160} defaultValue={v?.seo_description ?? project.seo_description} error={errors.seo_description} />
-      </fieldset>
 
       <div className="flex flex-wrap gap-3">
         <button type="submit" disabled={pending} className={primaryButton}>
